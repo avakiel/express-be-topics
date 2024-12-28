@@ -1,28 +1,18 @@
-const express = require("express");
-const cors = require("cors");
-
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
 const app = express();
-const PORT = process.env.PORT || 4000;
+const prisma = new PrismaClient();
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
-// Routes
-app.get("/", (req:any, res: any) => {
-  res.send("Hello from Express!");
+app.get("/api/topics", async (req, res) => {
+    const topics = await prisma.topic.findMany();
+    res.json(topics);
 });
 
-// Topics API
-app.get("/api/topics", (req: any, res: any) => {
-  res.json([
-    { id: "1", title: "Topic 1", parentId: null },
-    { id: "2", title: "Topic 2", parentId: null },
-  ]);
-});
+const PORT = process.env.PORT || 4000;
 
-// Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
